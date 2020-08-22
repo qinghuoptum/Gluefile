@@ -521,7 +521,7 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
     int k, pn, nFldsStart, nFldsLen, nValLen;
     char ch;
     char szKeyName[200], szFmt[200];
-    LPTSTR ps, pos, pos1;
+    LPTSTR ps, pos, pos1, pzLmt;
 
     nFldsStart = ptr->nPos;
     nFldsLen = ptr->nLen;
@@ -532,16 +532,18 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
     if ( k >= nFldsStart+nFldsLen )  return false;
 
     // Removal of garbage inside the field
-    pos = m_szBuf+k+pn; ps = pos;
-    while ( pos[0] && pos[0]!='>' && pos[0]!='}' )
+    pos = m_szBuf+k+pn;
+    ps = pos; pzLmt = m_szBuf+(nFldsStart+nFldsLen);
+
+    while ( (pos<pzLmt) && pos[0]!='>' && pos[0]!='}' ) // Considering remove '}' for multiple hidden segments
     {
         while ( pos[0]=='\\' || pos[0]=='\n' || pos[0]=='\r' )
         {
-            while ( pos[0] && pos[0]!=' ' && pos[0]!='\n' && pos[0]!='\r') ++pos;
+            while ( (pos<pzLmt) && pos[0]!=' ' && pos[0]!='\n' && pos[0]!='\r') ++pos;
             if ( pos[0]==' ' ) ++pos;
             else while ( pos[0]=='\n' || pos[0]=='\r') ++pos;
         }
-        if ( pos[0]==0 || pos[0]=='>' || pos[0]=='}' ) break;
+        if ( (pos>=pzLmt) || pos[0]=='>' || pos[0]=='}' ) break;
         (ps++)[0]=(pos++)[0];
     }
     if ( pos[0]=='>' ) (ps++)[0] = (pos++)[0];
@@ -559,8 +561,8 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
     while ( pos[0] && pos[0]<=' ' ) ++pos;
     pos1 = pos + 7;
     */
-    pos = m_szBuf+k+pn; j=0;
-    while ( pos[0] && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
+    pos = m_szBuf+k+pn; ps = pos; j=0;
+    while ( (pos<pzLmt) && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
     szKeyName[j]=0;
     if ( j>=199 ) return false;
     if ( pos[0]=='>' )
@@ -574,41 +576,39 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
     {
         ptr->nType = 2;
         ptr->pzLenPos = NULL;
-        while (pos[0] && pos[0]<=' ') ++pos;  if (pos[0]==0) return false;
+        while ((pos<pzLmt) && pos[0]<=' ') ++pos;  if (pos>=pzLmt) return false;
         ptr->nValLen = 0;
         j=0; ps=pos;
-        while ( pos[0] && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
-        if (j>=199 || pos[0]==0 ) return false;
+        while ( (pos<pzLmt) && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
+        if (j>=199 || (pos>=pzLmt) ) return false;
         szKeyName[j]=0;
         strcpy( ptr->szKeyName, szKeyName);
-        pos1 = pos;
     }
     else
     {
         ptr->nType = 1;
         strcpy( ptr->szKeyName, szKeyName);
-        while (pos[0] && pos[0]<=' ') ++pos;  if (pos[0]==0) return false;
-        pos1 = pos;
-        nValLen = atoi(pos1); if ( nValLen>99 ) return false;
+        while ((pos<pzLmt) && pos[0]<=' ') ++pos;  if (pos>=pzLmt) return false;
+        nValLen = atoi(pos); if ( nValLen>99 ) return false;
         ptr->nValLen = nValLen;
-        ptr->pzLenPos = pos1;
-        while (pos1[0]>' ') ++pos1;
+        ptr->pzLenPos = pos;
+        while ((pos<pzLmt) && pos[0]>' ') ++pos;
     }
 
     ptr->pzNamePos = ps;
-    while (pos1[0] && pos1[0]<=' ') ++pos1;  if (pos1[0]==0) return false;
-    ptr->cPad = pos1[0]; ++pos1;
-    while (pos1[0] && pos1[0]<=' ') ++pos1;  if (pos1[0]==0) return false;
-    ptr->cFmtCode = pos1[0]; ++pos1;
-    ch = pos1[0]; ++pos1;
+    while ((pos<pzLmt) && pos[0]<=' ') ++pos;  if (pos>=pzLmt) return false;
+    ptr->cPad = pos[0]; ++pos;
+    while ((pos<pzLmt) && pos[0]<=' ') ++pos;  if (pos>=pzLmt) return false;
+    ptr->cFmtCode = pos[0]; ++pos;
+    ch = pos[0]; ++pos;
     if ( ch=='>' ) return true;
     else if ( ch=='=' && ptr->cFmtCode == ':' ) {
 		// Get Format String to szFmt
 		szFmt[0] = 0; j = 0;
-		while ( pos1[0] && pos1[0]!='>' && j<sizeof(szFmt)-1 )
-		    if ( pos1[0]>=' ' ) szFmt[j++]=(pos1++)[0]; else pos1++;
+		while ( (pos<pzLmt) && pos[0]!='>' && j<sizeof(szFmt)-1 )
+		    if ( pos[0]>=' ' ) szFmt[j++]=(pos++)[0]; else pos++;
 		szFmt[j] = 0;
-		if ( pos1[0]==0 || j>=sizeof(szFmt)-1 ) return false;
+		if ( (pos>=pzLmt) || j>=sizeof(szFmt)-1 ) return false;
 		ptr->szFormat = szFmt;
         return true;
     }
@@ -633,7 +633,7 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
        9 - ScanSheet Circled Expression
        */
     // Get the string to replace for within	pszParam
-    char szKeyNmX[200], szTmp[4000];
+    char szKeyNmX[200], szTmp[2000];
     LPTSTR psV1, psV2;
     LPTSTR pzv;
     LPTSTR szFmt;
@@ -649,6 +649,8 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
     // for nOnce=1, we need cancel this KeyName from the Param String
     // to prevent further processing
     if (nOnce) { psV1[0]='-', psV1[1]='-'; }
+
+
     psV1 += strlen( szKeyNmX );
     nVal = 0;
     while ( psV1[0] && psV1[0]!=']' && psV1[0]!='|' && nVal<sizeof(szTmp)-1 )
@@ -705,40 +707,25 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
             nKVTarLen = nKeyLen;
             break;
         case '5':  // Date/Time expression
-            if (ch=='=')
-            {
-                //sscanf( pos1, "%[^>\n]", szFmt );
-                nKVTarLen = GetCTimeStr( pzv, szFmt, szTmp );
-                break;
-            }
+            //sscanf( pos1, "%[^>\n]", szFmt );
+            nKVTarLen = GetCTimeStr( pzv, szFmt, szTmp );
+            break;
         case '6':  // sprintf string expression
-            if (ch=='=')
-            {
-                //sscanf( pos1, "%[^>\n]", szFmt );
-                nKVTarLen = GetFormatStr( pzv, szFmt, szTmp );
-                break;
-            }
+            //sscanf( pos1, "%[^>\n]", szFmt );
+            nKVTarLen = GetFormatStr( pzv, szFmt, szTmp );
+            break;
         case '7':  // sprintf numerical expression
-            if (ch=='=')
-            {
-                //sscanf( pos1, "%[^>\n]", szFmt );
-                nKVTarLen = GetFormatNum( pzv, szFmt, szTmp );
-                break;
-            }
+            //sscanf( pos1, "%[^>\n]", szFmt );
+            nKVTarLen = GetFormatNum( pzv, szFmt, szTmp );
+            break;
         case '8':  // sscanf string expression
-            if (ch=='=')
-            {
-                //sscanf( pos1, "%[^>\n]", szFmt );
-                nKVTarLen = GetScanfStr( pzv, szFmt, szTmp );
-                break;
-            }
-        case '9':  // ScanSheet Ciecled Expression
-            if (ch=='=')
-            {
-                //sscanf( pos1, "%[^>\n]", szFmt );
-                nKVTarLen = FormatForExp2( pzv, szTmp, szFmt );
-                break;
-            }
+            //sscanf( pos1, "%[^>\n]", szFmt );
+            nKVTarLen = GetScanfStr( pzv, szFmt, szTmp );
+            break;
+         case '9':  // ScanSheet Ciecled Expression
+            //sscanf( pos1, "%[^>\n]", szFmt );
+            nKVTarLen = FormatForExp2( pzv, szTmp, szFmt );
+            break;
         default:
             nKeyLen = nVal;
             nKVTarLen = nKeyLen;
@@ -771,9 +758,9 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
         {
             ptrv->nSrcPos = i;
             ptrv->nSrclen = 0;
+            // add a space in front/end of target value if it meets \par immediately
             if ( strnicmp( m_szBuf+i, "\\par", 4 )==0 && !bCopy )
             {
-                // add a space in front of target value
                 pzv = ptrv->szTarget;
                 nTgt = ptrv->nTgtLen;
                 pzv[nTgt] =' ';
@@ -787,34 +774,38 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
                 ++(ptrv->nTgtLen);
             }
         }
-        // So far, (nFldsStart, nK) gives out KeyValue (source string)
+        // So far, (ptr->nSrcPos, ptr->nSrcLen) gives out KeyValue (source string)
     }
-    else
+    else if ( ptrk->nType == 2)
     {
-        // Search a seg by looking for the end tag
+        // Search a segment by looking for the end tag
         bool ss = fasle;
         int j;
         k=i;
         while ( k<nLmt )
         {
             j=k;
-            if ( GetHiddenSegment( k, m_szBuf, nLmt, &subKey ) && ParseOneFieldKey( m_szBuf, &subKey ))
+            if (CHKHIDDEN(k, m_szBuf))
             {
-                if (strcmp(subKey.szKeyName, "End")==0)
+                if ( GetHiddenSegment( k, m_szBuf, nLmt, &subKey ) && ParseOneFieldKey( m_szBuf, &subKey ))
                 {
-                    ss = true;
-                    ptrv->nSrcPos = i;
-                    ptrv->nSrclen = (j-i);
-                    i = k;
+                    if ( (strcmp(subKey.szKeyName, "End")==0) && subKey.nType==2 )
+                    {
+                        ss = true;
+                        ptrv->nSrcPos = i;
+                        ptrv->nSrcLen = (j-i);
+                        i = k;
+                    }
+                    break;
                 }
-                break;
             }
             else
                 k++;
         }
         return ss;
     }
-
+    else
+        return false;
 }
 
 
@@ -929,19 +920,14 @@ void CRTFProc::ClearFields( int nOpt )
 BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 {
 	long i = 0, k = 0, mm, np = 0, j, nn = 0;
-	long nLev, nTmp;
-	long nFldsStart, nFldsLen;
-	CHAR szBuf[64000], szTmp[4000], szFmt[200], ch;
-	LPTSTR psV1, psV2, ps, pos, pos1, pos2;
-	// LPTSTR m_szBuf;
-
-	CHAR szKeyName[200], szKeyNmX[200], ch0, ch1, ch2;
-	CHAR szKeyTarVal[4000];
-	int nKeyLen, nValLen, nKVSrcLen, nKVTarLen, nK, pn, qn;
-	unsigned int ux;
+	long nTmp;
+	CHAR szBuf[64000], szTmp[2000], szFmt[200], ch;
 
     FIELDKEY sKey;
     FIELDVAL sVal;
+
+    memset( &sKey, 0, sizeof(sKey));
+    memset( &sVal, 0, sizeof(sVal));
 
 	// LOGFILE( "  ... Inside -- ", "0" );
 	fpSourceFile=fopen(szSourceFile,"rb");
@@ -974,16 +960,10 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 	// FormatAdjustEx( "$S:{\\stylesheet,", m_szBuf, nTmp );
 	m_szBuf[nTmp] = 0;
 	nLmt = nTmp;
-	np = nTmp;
-	
+    nn = 0;
+
 	while ( i < nLmt )
 	{
-		if ((np--)<0)
-		{
-			LOGFILE( "  ... Inside -- ", "Error 1" );
-			break;
-		}
-
 		if (CHKHIDDEN(i,m_szBuf))
 		{
 		    if (GetHiddenSegment( i, m_szBuf, nLmt, &sKey ) && ParseOneFieldKey( m_szBuf, &sKey ))
@@ -993,345 +973,45 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 		            if ( GetOneFieldValue( i, m_szBuf, nLmt, &sKey, &sVal, false ) )
 		            {
                         // Replace the source string with target
-                        if ( nK == nKVTarLen )
-                            strncpy( m_szBuf+nFldsStart, szKeyTarVal, nK );
+                        // Source: ptr->nSrcPos, ptr->nSrcLen
+                        // Target: ptr->szTarget, ptr->nTgtLen
+                        int nSrc, nTgt, nSrcPos;
+                        LPTSTR pzSrc, pzTgt;
+
+                        nSrcPos = ptr->nSrcPos;
+                        nSrc = ptr->nSrcLen;
+                        pzSrc = m_szBuf + nSrcPos;
+                        nTgt = ptr->nTgtLen;
+                        pzTgt = ptr->szTarget;
+                        if ( sKey.nType==1 && nTgt>99 ) nTgt=99;
+
+                        nn++;  // Count number of replacement
+                        if ( nSrc == nTgt )
+                            strncpy( pzSrc, pzTgt, nSrc );
                         else
                         {
-                            if ( nKVTarLen-nK <= (int)sizeof(szTmp) )
-                            {
-                                memmove( m_szBuf+nFldsStart+nKVTarLen, m_szBuf+nFldsStart+nK,
-                                         nLmt-(nFldsStart+nK) );
-                                memcpy( m_szBuf+nFldsStart, szKeyTarVal, nKVTarLen );
-                                nTmp = nLmt+(nKVTarLen-nK);
-                                np += (nKVTarLen-nK);
-                            }
-                            else
-                                nTmp = 0;
+                            memmove( pzSrc+nTgt, pzSrc+nSrc, nLmt-(nSrcPos+nSrc) );
+                            memcpy( pzSrc, pzTgt, nTgt );
+                            // memmove( m_szBuf+nFldsStart+nKVTarLen, m_szBuf+nFldsStart+nK,nLmt-(nFldsStart+nK) );
+                            // memcpy( m_szBuf+nFldsStart, szKeyTarVal, nKVTarLen );
+                            nTmp = nLmt+(nTgt-nSrc);
+                            // np += (nKVTarLen-nK);
                             // nTmp = ReplaceOneFlds( nFldsStart, nKVSrcLen, nKVTarLen, nLmt, szKeyTarVal );
-                            if ( nTmp )
-                            {
-                                nLmt = nTmp;
-                                i = nFldsStart+nKVTarLen;
-                                sprintf( szTmp, "%02d", mm );
-                                strncpy( pos, szTmp, 2);
-                                // For nOnce=1, we need cancel this field for furthering processing
-                                if (nOnce) { (pos-2)[0]='#'; (pos-3)[0]='#'; }
-                            }
+
+                            // Write target len in the field key if necessary
+                            sprintf( szTmp, "%02d", nTgt);
+                            if ( sKey.nType==1 ) strncpy( sKey.pzLenPos, szTmp, 2);
+                            // For nOnce=1, we need cancel this field for furthering processing
+                            if ( nOnce ) strncpy( sKey.pzNamePos, "##", 2)
                         }
 		            }
 		        }
-
-
 		    }
 		}
 		else
 		    ++i;
+    }
 
-		if (CHKHIDDEN(i,m_szBuf))
-		{
-			// Get the Start Point of Hidden Text Section
-
-			// Looking for the end of this hidden section
-			nFldsStart = i;
-			nFldsLen = 1;
-			ch = m_szBuf[i];
-			if (ch=='{') nLev=1; else nLev=0;
-			do 
-			{
-				nFldsLen++; i++;
-				if (m_szBuf[i]=='{') nLev++;
-				if (m_szBuf[i]=='}') nLev--;
-				if ((np--)<0)
-				{
-					LOGFILE( "  ... Inside -- ", "Error 2" );
-					break;
-				}
-			}
-			while ( !( ENDHIDDEN(i) && nLev==0 ) && (i<nLmt) ); 
-			i++;
-			if ( ch!='{' && m_szBuf[i]==' ' ) i++;
-			while ( m_szBuf[i]=='\n'|| m_szBuf[i]=='\r' ) i++;
-			
-			if ( (m_szBuf[i]!='{' || !CHKHIDDEN(i,m_szBuf)) && ch=='{' )
-			{
-				if (m_szBuf[i]=='{') i++;
-				while ( m_szBuf[i]=='\n' || m_szBuf[i]=='\r') i++;
-				while ( m_szBuf[i]=='\\' && ( m_szBuf[i+1]!='\'' && m_szBuf[i+1]!='_' && m_szBuf[i+1]!='{' && m_szBuf[i+1]!='}' 
-					&& strncmp(m_szBuf+i+1,"par",3) && strncmp(m_szBuf+i+1,"tab",3) && strncmp(m_szBuf+i+1,"cell",4) ))
-				{
-					while (m_szBuf[i] && m_szBuf[i]!=' ') i++;
-					i++;
-					while ( m_szBuf[i]=='\n' || m_szBuf[i]=='\r' ) i++;
-				}
-			}
-
-			if (i>=nLmt) break;
-			// So far, (nFldsStart, nFldsLen) give out a Hidden Section, i -> next pos
-
-			// Parse Key String within this Hidden Section to get all parameters
-			k= nFldsStart;
-			while (! ((pn=CHKFIELD(k, m_szBuf))>0) && (k < nFldsStart+nFldsLen)) k++;
-			if ( k >= nFldsStart+nFldsLen )  goto Loop;
-			
-			// Removal of garbage inside the field
-			pos = m_szBuf+k+pn; ps = pos;
-			/* while ( pos[0] && pos[0]!='>' && pos[0]!='}' )
-			{
-				if ( pos[0]=='\\' )
-				{
-					while ( pos[0] && pos[0]!=' ' ) ++pos;
-					if ( pos[0]==' ' ) ++pos;
-				}
-				else if ( pos[0]=='\n' ) pos++;
-				else if ( pos[0]=='\r' ) pos++;
-				if ( pos[0]==0 || pos[0]=='>' || pos[0]=='}' ) break;
-				(ps++)[0]=(pos++)[0];
-			} */
-			/* while ( pos[0] && pos[0]!='>' && pos[0]!='}' )
-			{
-				if ( pos[0]=='\\' )
-				{
-					while ( pos[0] && pos[0]!=' ' && pos[0]!='\n' && pos[0]!='\r') ++pos;
-					while ( pos[0]==' ' || pos[0]=='\n' || pos[0]=='\r') ++pos;
-				}
-				else if ( pos[0]=='\n' || pos[0]=='\r' )
-				{
-					while ( pos[0]=='\n' || pos[0]=='\r' ) pos++;
-					if ( pos[0]=='\\' )
-					{
-						while ( pos[0] && pos[0]!=' ' ) ++pos;
-						if ( pos[0]==' ' ) ++pos;
-					}
-				}
-				if ( pos[0]==0 || pos[0]=='>' || pos[0]=='}' ) break;
-				(ps++)[0]=(pos++)[0];
-			}
-			if ( pos[0]=='>' ) (ps++)[0] = (pos++)[0]; 
-			while ( ps<pos ) (ps++)[0]=' '; */ 
-			while ( pos[0] && pos[0]!='>' && pos[0]!='}' )
-			{
-				while ( pos[0]=='\\' || pos[0]=='\n' || pos[0]=='\r' )
-				{
-					while ( pos[0] && pos[0]!=' ' && pos[0]!='\n' && pos[0]!='\r') ++pos;
-					if ( pos[0]==' ' ) ++pos; 
-					else while ( pos[0]=='\n' || pos[0]=='\r') ++pos;
-				}
-				if ( pos[0]==0 || pos[0]=='>' || pos[0]=='}' ) break;
-				(ps++)[0]=(pos++)[0];
-			}
-			if ( pos[0]=='>' ) (ps++)[0] = (pos++)[0]; 
-			while ( ps<pos ) (ps++)[0]=' '; 
-
-
-			ch=' ';	ch0=' '; ch1=' '; ch2=' '; 
-			szKeyName[0]=0;	nKeyLen=0;
-			
-			// Need more detail parsing for <*KeyName dd d d> or <*KeyName dd d :=Format String>
-			/* sscanf( m_szBuf+k+2,"%199[^> ]%c%d %c%*c%c%c",
-					szKeyName, &ch0, &nKeyLen, &ch1, &ch2, &ch );
-			if (ch0=='>' || (ch!='>' && ch!='=' ) || nKeyLen<0 || nKeyLen>99 ) goto Loop;
-			pos = m_szBuf+(k+2)+strlen(szKeyName)+1;
-			while ( pos[0] && pos[0]<=' ' ) ++pos;
-			pos1 = pos + 7; 
-			/*/
-			pos = m_szBuf+k+pn; j=0;
-			while ( pos[0] && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
-			szKeyName[j]=0; if (pos[0]=='>' || j>=199 ) goto Loop;
-			while (pos[0] && pos[0]<=' ') ++pos;  if (pos[0]==0) goto Loop;
-			pos1 = pos;
-			nKeyLen = atoi(pos1); if ( nKeyLen>99 ) goto Loop;
-			while (pos1[0]>' ') ++pos1;
-			while (pos1[0] && pos1[0]<=' ') ++pos1;  if (pos1[0]==0) goto Loop;
-			ch1 = pos1[0]; ++pos1;
-			while (pos1[0] && pos1[0]<=' ') ++pos1;  if (pos1[0]==0) goto Loop;
-			ch2 = pos1[0]; ++pos1; ch = pos1[0]; ++pos1;
-			if (ch!='>' && ch!='=' ) goto Loop;
-
-		   /*	 C : PAD format
-	       0 - PADLeft   
-		   1 - PADRight   
-		   2 - PADCenter
-		   3 - No PAD, delete E which length in B, insert replace string, 
-		       fill length of replace string in B 
-		   4 - Same as 3, but keep the original string if G is null
-		   5 - strftime Expression
-		   6 - sprinf Formated String
-		   7 - sprintf Formated Numerical
-		   8 - sscanf Formated String
-		   9 - ScanSheet Circled Expression 
-*/
-			// Get the string to replace for within	pszParam
-			strcpy( szKeyNmX, szKeyName ); strcat( szKeyNmX, "=" );
-			psV1 = strstr( pszParam, szKeyNmX );
-			if (psV1==NULL) goto Loop; // This Key does not exist in pszParam
-			// for nOnce=1, we need cancel this KeyName from the Param String
-			// to prevent further processing
-			if (nOnce) { psV1[0]='-', psV1[1]='-'; }
-			psV1 += strlen( szKeyName )+1;
-			nValLen = 0;
-			while ( psV1[0] && psV1[0]!=']' && psV1[0]!='|' && nValLen<sizeof(szTmp)-1 )
-			{
-				ux = (unsigned int)psV1[0] & 0x0FF;
-				if ( ux<128 ) szTmp[nValLen++]=(psV1++)[0];
-				else 
-				{
-					szTmp[nValLen++]='\\'; szTmp[nValLen++]='\'';
-					sprintf( szTmp+nValLen, "%02x", ux ); nValLen+=2;
-					psV1++;
-				}
-			}
-			szTmp[nValLen]=0;
-			
-			if (nValLen==0 && ch1=='4') goto Loop; //keep original with a NULL
-			++nn;  // Counting the fields to be replaced.
-
-			// Get Format String to szFmt
-			szFmt[0] = 0; k = 0;
-			while ( pos1[0] && pos1[0]!='>' && ch2==':' && k<sizeof(szFmt)-1 )
-				if ( pos1[0]>=' ' ) szFmt[k++]=(pos1++)[0]; else pos1++;
-			szFmt[k] = 0;
-
-			// Formating the target string (replace for)
-			nKVSrcLen = nKeyLen;
-			nKVTarLen = nKeyLen;
-			switch (ch1)
-			{
-			case '0':  // Pad Left
-				if ( nValLen>=nKeyLen ) 
-					strncpy( szKeyTarVal, szTmp, nKeyLen );
-				else
-				{
-					memset( szKeyTarVal, ch2, nKeyLen );
-					strncpy( szKeyTarVal+(nKeyLen-nValLen), szTmp, nValLen);
-				}
-				break;
-			case '1':  // Pad Right
-				if ( nValLen>=nKeyLen ) 
-					strncpy( szKeyTarVal, szTmp, nKeyLen );
-				else
-				{
-					memset( szKeyTarVal, ch2, nKeyLen );
-					strncpy( szKeyTarVal, szTmp, nValLen);
-				}
-				break;
-			case '2':  // Pad Middle
-				if ( nValLen>=nKeyLen ) 
-					strncpy( szKeyTarVal, szTmp, nKeyLen );
-				else
-				{
-					memset( szKeyTarVal, ch2, nKeyLen );
-					strncpy( szKeyTarVal+(nKeyLen-nValLen)/2, szTmp, nValLen);
-				}
-				break;
-			case '5':  // Date/Time expression
-				if (ch=='=')
-				{
-					//sscanf( pos1, "%[^>\n]", szFmt );
-					nKVTarLen = GetCTimeStr( szKeyTarVal, szFmt, szTmp );
-					break;
-				}
-			case '6':  // sprintf string expression
-				if (ch=='=')
-				{
-					//sscanf( pos1, "%[^>\n]", szFmt );
-					nKVTarLen = GetFormatStr( szKeyTarVal, szFmt, szTmp );
-					break;
-				}
-			case '7':  // sprintf numerical expression
-				if (ch=='=')
-				{
-					//sscanf( pos1, "%[^>\n]", szFmt );
-					nKVTarLen = GetFormatNum( szKeyTarVal, szFmt, szTmp );
-					break;
-				}
-			case '8':  // sscanf string expression
-				if (ch=='=')
-				{
-					//sscanf( pos1, "%[^>\n]", szFmt );
-					nKVTarLen = GetScanfStr( szKeyTarVal, szFmt, szTmp );
-					break;
-				}
-			case '9':  // ScanSheet Ciecled Expression
-				if (ch=='=')
-				{
-					//sscanf( pos1, "%[^>\n]", szFmt );
-					nKVTarLen = FormatForExp2( szKeyTarVal, szTmp, szFmt );
-					// nKVTarLen = GetScanSheetStr( szKeyTarVal, szFmt, szTmp );
-					/*nKVSrcLen = nKeyLen;
-					nKeyLen = nValLen;
-					nKVTarLen = nKeyLen;
-					strncpy( szKeyTarVal, szTmp, sizeof(szKeyTarVal) );*/
-					break;
-				}
-			default: 
-				nKVSrcLen = nKeyLen;
-				nKeyLen = nValLen;
-				nKVTarLen = nKeyLen;
-				strncpy( szKeyTarVal, szTmp, sizeof(szKeyTarVal) );
-			}
-			szKeyTarVal[ nKVTarLen ] = 0;
-
-			// Search the Source String	(to be replaced ) in RTF
-			mm = nKVTarLen;
-			// Control to 99 chars
-			// if ( mm>99 ) { mm = 99; szKeyTarVal[ mm ] = 0; }
-
-			if (nKVSrcLen>0)
-			{
-				k=0;  nK=0;
-				qn = 0;
-				k = SCANFIELD( m_szBuf+i, nKVSrcLen, qn );
-				nFldsStart = i+qn;
-				nKVSrcLen = k; nK = k-qn;
-			}
-			else
-			{
-				nFldsStart = i;	nK = 0;
-				if (strnicmp( m_szBuf+i, "\\par", 4 )==0) 
-				{
-					szKeyTarVal[nKVTarLen]=' ';
-					szKeyTarVal[++nKVTarLen]=0;
-					if ( !( m_szBuf[i-1]=='\n' && m_szBuf[i-2]=='\r' && m_szBuf[i-3]==' ' ||
-						    m_szBuf[i-1]=='\n' && m_szBuf[i-2]==' ' || m_szBuf[i-1]==' ' ) ) 
-					{
-						memmove(szKeyTarVal+1, szKeyTarVal, nKVTarLen-1);
-						szKeyTarVal[0]=' ';
-					}
-				}
-			}
-			// So far, (nFldsStart, nK) gives out KeyValue (source string)
-
-			// Replace the source string with target
-			if ( nK == nKVTarLen )
-				strncpy( m_szBuf+nFldsStart, szKeyTarVal, nK );
-			else
-			{
-				if ( nKVTarLen-nK <= (int)sizeof(szTmp) )  
-				{
-					memmove( m_szBuf+nFldsStart+nKVTarLen, m_szBuf+nFldsStart+nK, 
-						     nLmt-(nFldsStart+nK) );
-					memcpy( m_szBuf+nFldsStart, szKeyTarVal, nKVTarLen ); 
-					nTmp = nLmt+(nKVTarLen-nK);
-					np += (nKVTarLen-nK);
-				}
-				else
-					nTmp = 0;
-				// nTmp = ReplaceOneFlds( nFldsStart, nKVSrcLen, nKVTarLen, nLmt, szKeyTarVal );
-				if ( nTmp )
-				{
-					nLmt = nTmp;
-					i = nFldsStart+nKVTarLen;
-					sprintf( szTmp, "%02d", mm ); 
-					strncpy( pos, szTmp, 2);
-					// For nOnce=1, we need cancel this field for furthering processing
-					if (nOnce) { (pos-2)[0]='#'; (pos-3)[0]='#'; }					
-				}
-			}
-		}
-		else
-			i++;
-Loop:	;	
-	}
 	LOGFILE( "  ... Inside -- ", "2" );
 
 	char Mark[64], Value[64];

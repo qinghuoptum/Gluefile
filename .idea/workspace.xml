@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fa47fd54-5454-4e71-b3c0-c525a5cf63cb" name="Default Changelist" comment="" />
+    <list default="true" id="b0f5422e-c62f-47ab-beac-228b21f635e4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PatParse_.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PatParse_.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RTFProc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/RTFProc.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,7 +20,6 @@
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
-  <component name="ProjectId" id="1gNjxexlWAoBqf14CRUpRwhKxl8" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -21,8 +27,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="IgnoreLang" />
   </component>
   <component name="SbtLocalSettings">
     <option name="projectSyncType">
@@ -43,22 +51,16 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="fa47fd54-5454-4e71-b3c0-c525a5cf63cb" name="Default Changelist" comment="" />
-      <created>1597962191426</created>
+      <changelist id="b0f5422e-c62f-47ab-beac-228b21f635e4" name="Default Changelist" comment="" />
+      <created>1598111415861</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1597962191426</updated>
-      <workItem from="1597962195049" duration="30432000" />
+      <updated>1598111415861</updated>
+      <workItem from="1598111419452" duration="9023000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="590" y="320" width="670" height="676" key="search.everywhere.popup" timestamp="1598034418195">
-      <screen x="0" y="23" width="1680" height="978" />
-    </state>
-    <state x="590" y="320" width="670" height="676" key="search.everywhere.popup/0.23.1680.978@0.23.1680.978" timestamp="1598034418195" />
   </component>
 </project>
