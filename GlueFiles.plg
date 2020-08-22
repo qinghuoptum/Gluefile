@@ -8,33 +8,33 @@
 <h3>Command Lines</h3>
 Creating command line "midl.exe /tlb ".\GlueFiles.tlb" /h "GlueFiles.h" /iid "GlueFiles_i.c" /Oicf "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\GlueFiles.idl""
 Creating command line "rc.exe /l 0x804 /fo"ReleaseMinDependency/GlueFiles.res" /d "NDEBUG" "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\GlueFiles.rc"" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB1E.tmp" with contents
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP2F6.tmp" with contents
 [
 /nologo /MT /W3 /GX /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_WINDLL" /FR"ReleaseMinDependency/" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\CreFnetFile.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSPEB1E.tmp" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB1F.tmp" with contents
+Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSP2F6.tmp" 
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP316.tmp" with contents
 [
 /nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_WINDLL" /FR"ReleaseMinDependency/" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\FSound.cpp"
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\PatParse.cpp"
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSPEB1F.tmp" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB20.tmp" with contents
+Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSP316.tmp" 
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP336.tmp" with contents
 [
 /nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_WINDLL" /FR"ReleaseMinDependency/" /Fp"ReleaseMinDependency/GlueFiles.pch" /YX /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\GlueFiles.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSPEB20.tmp" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB21.tmp" with contents
+Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSP336.tmp" 
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP356.tmp" with contents
 [
 /nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_WINDLL" /FR"ReleaseMinDependency/" /Fp"ReleaseMinDependency/GlueFiles.pch" /Yc"stdafx.h" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
 "C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSPEB21.tmp" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB22.tmp" with contents
+Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSP356.tmp" 
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP386.tmp" with contents
 [
 shlwapi.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"ReleaseMinDependency/GlueFiles.pdb" /machine:I386 /def:".\GlueFiles.def" /out:"GlueFiles.dll" /implib:"ReleaseMinDependency/GlueFiles.lib" 
 .\ReleaseMinDependency\CreFnetFile.obj
@@ -45,14 +45,14 @@ shlwapi.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"ReleaseMinDepe
 .\ReleaseMinDependency\StdAfx.obj
 .\ReleaseMinDependency\GlueFiles.res
 ]
-Creating command line "link.exe @C:\Users\Qing\AppData\Local\Temp\RSPEB22.tmp"
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPEB23.bat" with contents
+Creating command line "link.exe @C:\Users\Qing\AppData\Local\Temp\RSP386.tmp"
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP3C6.bat" with contents
 [
 @echo off
 regsvr32 ".\GlueFiles.dll"
 echo regsvr32 exec. time > ".\ReleaseMinDependency\regsvr32.trg"
 ]
-Creating command line "C:\Users\Qing\AppData\Local\Temp\RSPEB23.bat"
+Creating command line "C:\Users\Qing\AppData\Local\Temp\RSP3C6.bat"
 Creating Type Library...
 Microsoft (R) MIDL Compiler Version 5.01.0164  
 Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
@@ -102,30 +102,51 @@ C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\PatParse.cpp(8204
 C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\PatParse.cpp(8372) : warning C4129: '^' : unrecognized character escape sequence
 C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\PatParse.cpp(8449) : warning C4129: '^' : unrecognized character escape sequence
 RTFProc.cpp
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(397) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(708) : warning C4101: 'pos2' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(708) : warning C4101: 'psV2' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1496) : warning C4101: 'nTmp' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2629) : warning C4101: 'ns' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2631) : warning C4101: 'szTemp' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2630) : warning C4101: 'pn' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2776) : warning C4101: 'pExt' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2776) : warning C4101: 'pDescrip' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2961) : warning C4101: 'pExt' : unreferenced local variable
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(2961) : warning C4101: 'pDescrip' : unreferenced local variable
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(270) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(468) : error C2556: 'int __thiscall CRTFProc::GetHiddenSegment(int &,char *,int,struct tagFIELDKEY *)' : overloaded function differs only by return type from 'bool __thiscall CRTFProc::GetHiddenSegment(int &,char *,int,struct tagFIELDKEY *)'
+        C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.h(270) : see declaration of 'GetHiddenSegment'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(468) : error C2371: 'GetHiddenSegment' : redefinition; different basic types
+        C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.h(270) : see declaration of 'GetHiddenSegment'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(564) : error C2065: 'j' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(612) : error C2039: 'szFormat' : is not a member of 'tagFIELDKEY'
+        C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.h(173) : see declaration of 'tagFIELDKEY'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(647) : error C2065: 'pszParam' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(675) : error C2039: 'szFormat' : is not a member of 'tagFIELDKEY'
+        C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.h(173) : see declaration of 'tagFIELDKEY'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(760) : error C2039: 'nSrclen' : is not a member of 'tagFIELDVAL'
+        C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.h(188) : see declaration of 'tagFIELDVAL'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(782) : error C2065: 'fasle' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(782) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(790) : error C2065: 'subKey' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(792) : error C2228: left of '.szKeyName' must have class/struct/union type
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(792) : error C2228: left of '.nType' must have class/struct/union type
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(969) : error C2664: 'GetHiddenSegment' : cannot convert parameter 1 from 'long' to 'int &'
+        A reference that is not to 'const' cannot be bound to a non-lvalue
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(971) : error C2065: 'm_szPrm' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(973) : error C2664: 'GetOneFieldValue' : cannot convert parameter 1 from 'long' to 'int &'
+        A reference that is not to 'const' cannot be bound to a non-lvalue
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(981) : error C2065: 'ptr' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(981) : error C2227: left of '->nSrcPos' must point to class/struct/union
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(982) : error C2227: left of '->nSrcLen' must point to class/struct/union
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(984) : error C2227: left of '->nTgtLen' must point to class/struct/union
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(985) : error C2227: left of '->szTarget' must point to class/struct/union
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1006) : error C2143: syntax error : missing ';' before '}'
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1022) : error C2065: 'ps' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1022) : error C2440: '=' : cannot convert from 'char *' to 'int'
+        This conversion requires a reinterpret_cast, a C-style cast or function-style cast
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1026) : error C2109: subscript requires array or pointer type
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1028) : error C2065: 'ch1' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1028) : error C2065: 'ch2' : undeclared identifier
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1029) : error C2109: subscript requires array or pointer type
+C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(1029) : error C2109: subscript requires array or pointer type
 Generating Code...
-Compiling...
-GlueFiles.cpp
-Linking...
-   Creating library ReleaseMinDependency/GlueFiles.lib and object ReleaseMinDependency/GlueFiles.exp
-LINK : warning LNK4089: all references to "SHELL32.dll" discarded by /OPT:REF
+Error executing cl.exe.
 <h3>Output Window</h3>
-Performing Registration
 
 
 
 <h3>Results</h3>
-GlueFiles.dll - 0 error(s), 29 warning(s)
+GlueFiles.dll - 27 error(s), 19 warning(s)
 </pre>
 </body>
 </html>

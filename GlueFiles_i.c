@@ -5,7 +5,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Sun Nov 05 19:53:03 2017
+/* at Sat Aug 22 12:52:29 2020
  */
 /* Compiler settings for C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\GlueFiles.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext

@@ -464,7 +464,7 @@ int CRTFProc::FormatAdjustEx( LPCTSTR pszTgtStr, LPTSTR m_szBuf, long& m_total )
 }
 
 
-int CRTFProc::GetHiddenSegment( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr )
+bool CRTFProc::GetHiddenSegment( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr )
 {
     int nLev, nFldsStart, nFldsLen;
     char ch;
@@ -518,10 +518,10 @@ int CRTFProc::GetHiddenSegment( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr 
 
 bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
 {
-    int k, pn, nFldsStart, nFldsLen, nValLen;
+    int j, k, pn, nFldsStart, nFldsLen, nValLen;
     char ch;
     char szKeyName[200], szFmt[200];
-    LPTSTR ps, pos, pos1, pzLmt;
+    LPTSTR ps, pos, pzLmt;
 
     nFldsStart = ptr->nPos;
     nFldsLen = ptr->nLen;
@@ -609,7 +609,7 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
 		    if ( pos[0]>=' ' ) szFmt[j++]=(pos++)[0]; else pos++;
 		szFmt[j] = 0;
 		if ( (pos>=pzLmt) || j>=sizeof(szFmt)-1 ) return false;
-		ptr->szFormat = szFmt;
+		strcpy(ptr->szFormat, szFmt);
         return true;
     }
     else
@@ -617,7 +617,7 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
 
 }
 
-bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, int nOnce )
+bool CRTFProc::GetOneSourceValue( LPCTSTR pszParam, FIELDKEY *ptrk, FIELDVAL *ptrv, int nOnce )
 {
        /*	 C : PAD format
        0 - PADLeft
@@ -634,10 +634,10 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
        */
     // Get the string to replace for within	pszParam
     char szKeyNmX[200], szTmp[2000];
-    LPTSTR psV1, psV2;
+    LPTSTR psV1;
     LPTSTR pzv;
     LPTSTR szFmt;
-    int nTgt, nVal, ux, nKeyLen, nKVTarLen;
+    int nVal, ux, nKeyLen, nKVTarLen;
     char ch1, ch2;
 
     ch1 = ptrk->cPad;
@@ -733,14 +733,16 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
     }
     pzv[ nKVTarLen ] = 0;
     ptrv->nTgtLen = nKVTarLen;
+	return true;
 }
 
 
 bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptrk, FIELDVAL *ptrv, bool bCopy )
 {
-    int k, nk, qn;
+    int k, qn;
     LPTSTR pzv;
     int nTgt;
+	FIELDKEY subKey;
 
     if ( ptrk->nType == 1)
     {
@@ -757,7 +759,7 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
         else
         {
             ptrv->nSrcPos = i;
-            ptrv->nSrclen = 0;
+            ptrv->nSrcLen = 0;
             // add a space in front/end of target value if it meets \par immediately
             if ( strnicmp( m_szBuf+i, "\\par", 4 )==0 && !bCopy )
             {
@@ -775,11 +777,12 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
             }
         }
         // So far, (ptr->nSrcPos, ptr->nSrcLen) gives out KeyValue (source string)
+		return true;
     }
     else if ( ptrk->nType == 2)
     {
         // Search a segment by looking for the end tag
-        bool ss = fasle;
+        bool ss = false;
         int j;
         k=i;
         while ( k<nLmt )
@@ -919,9 +922,9 @@ void CRTFProc::ClearFields( int nOpt )
 //
 BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 {
-	long i = 0, k = 0, mm, np = 0, j, nn = 0;
+	int i = 0, k = 0, np = 0, nn = 0;
 	long nTmp;
-	CHAR szBuf[64000], szTmp[2000], szFmt[200], ch;
+	CHAR szBuf[64000], szTmp[2000];
 
     FIELDKEY sKey;
     FIELDVAL sVal;
@@ -968,7 +971,7 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 		{
 		    if (GetHiddenSegment( i, m_szBuf, nLmt, &sKey ) && ParseOneFieldKey( m_szBuf, &sKey ))
 		    {
-		        if ( GetOneSourceValue( m_szPrm, &sKey, &sVal, nOnce ) )
+		        if ( GetOneSourceValue( pszParam, &sKey, &sVal, nOnce ) )
 		        {
 		            if ( GetOneFieldValue( i, m_szBuf, nLmt, &sKey, &sVal, false ) )
 		            {
@@ -978,11 +981,11 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
                         int nSrc, nTgt, nSrcPos;
                         LPTSTR pzSrc, pzTgt;
 
-                        nSrcPos = ptr->nSrcPos;
-                        nSrc = ptr->nSrcLen;
+                        nSrcPos = sVal.nSrcPos;
+                        nSrc = sVal.nSrcLen;
                         pzSrc = m_szBuf + nSrcPos;
-                        nTgt = ptr->nTgtLen;
-                        pzTgt = ptr->szTarget;
+                        nTgt = sVal.nTgtLen;
+                        pzTgt = sVal.szTarget;
                         if ( sKey.nType==1 && nTgt>99 ) nTgt=99;
 
                         nn++;  // Count number of replacement
@@ -1002,7 +1005,7 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
                             sprintf( szTmp, "%02d", nTgt);
                             if ( sKey.nType==1 ) strncpy( sKey.pzLenPos, szTmp, 2);
                             // For nOnce=1, we need cancel this field for furthering processing
-                            if ( nOnce ) strncpy( sKey.pzNamePos, "##", 2)
+                            if ( nOnce ) strncpy( sKey.pzNamePos, "##", 2);
                         }
 		            }
 		        }
@@ -1014,8 +1017,9 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 
 	LOGFILE( "  ... Inside -- ", "2" );
 
-	char Mark[64], Value[64];
+	char Mark[64], Value[64], ch1, ch2;
 	int nOpt, nRv=0;
+	LPTSTR ps;
 	// char szBuf[64000];
 
 	nOpt = BARC_OPT_WITH_CHAR;
@@ -1440,7 +1444,7 @@ int CRTFProc::InsertSignPic( LPCTSTR signPicFileName, int signatoryID, int nChkO
 
 int CRTFProc::InsertSignPic( LPCTSTR signPicFileName, LPTSTR pzPic, LPTSTR pzDate, int nChkOnly )
 {
-	int   nTmp, pn;
+	int   pn;
 	TCHAR szTemp[32]={0}, szKeyString[32]={0}, szKeyString2[32]={0};
 
 	strcpy( szKeyString, pzPic );
@@ -2573,9 +2577,7 @@ int CRTFProc::ExtendFunction( LPTSTR pszKey, int nOpt )
 //   atmost four barcode
 void CRTFProc::InsertRTFBarCode( LPTSTR pszFlds )
 {
-	BOOL ns;
-	int nTmp, pn;
-	TCHAR szTemp[200];
+	int nTmp;
 
 	fpSourceFile=fopen(szSourceFile,"rb");
 	if (fpSourceFile == NULL) return;
@@ -2720,7 +2722,7 @@ BOOL CRTFProc::RtfExport( int nFmt, LPTSTR pzRes )
 	lpGetWriteNames GetWriteNames;
 
 	// HINSTANCE hLibrary;
-	LPTSTR pClass, pDescrip, pExt;
+	LPTSTR pClass;
 	HGLOBAL hpFileName, hpClass, hpDescrip, hpExt;
 	// char m_szModule[32];
 	long result;
@@ -2905,7 +2907,7 @@ BOOL CRTFProc::RtfImport( int nFmt, LPTSTR pzRes )
 	lpGetWriteNames GetWriteNames;
 
 	// HINSTANCE hLibrary;
-	LPTSTR pClass, pDescrip, pExt;
+	LPTSTR pClass;
 	HGLOBAL hpFileName, hpClass, hpDescrip, hpExt;
 	// char m_szModule[32];
 	long result;
