@@ -180,7 +180,7 @@ typedef struct tagFIELDKEY
 	int nValLen;
 	char cPad;
 	char cFmtCode;
-	char szFmtStr[200];
+	char szFormat[200];
 } FIELDKEY;
 
 
@@ -270,7 +270,7 @@ private:
     bool GetHiddenSegment( int& i, LPTSTR pzBuf, int nLmt, FIELDKEY *ptr );
     bool ParseOneFieldKey( LPTSTR pzBuf, FIELDKEY *ptr );
     bool GetOneFieldValue( int& i, LPTSTR pzBuf, int nLmt, FIELDKEY *ptrk, FIELDVAL *ptrv, bool bCopy );
-    bool GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, int nOnce );
+    bool GetOneSourceValue( LPCTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, int nOnce );
 
 
 	int nLmt;
