@@ -1,0 +1,63 @@
+// GlueFiles.idl : IDL source for GlueFiles.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (GlueFiles.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(7408BACE-D724-11D3-A70A-000021E20B2D),
+		dual,
+		helpstring("ICreFnetFile Interface"),
+		pointer_default(unique)
+	]
+	interface ICreFnetFile : IDispatch
+	{
+		//Standard Server Side Component Methods
+		HRESULT OnStartPage([in] IUnknown* piUnk);
+		HRESULT OnEndPage();	
+		[id(1), helpstring("method GetFilename")] HRESULT GetFilename([in] BSTR SourceFileName,[in]  BSTR DestinationFileName);
+		[id(2), helpstring("method RefreshField")] HRESULT RefreshField([in] BSTR FieldValue);
+		[id(3), helpstring("method InsertSignPic")] HRESULT InsertSignPic([in] BSTR PicFileName,[in] short signatoryID);
+		[id(4), helpstring("method GlueFile")] HRESULT GlueFile([in] short edit,[in] short sign,[in] BSTR usercode,[in] BSTR password,[in] short batch,[in] BSTR fields);
+		[id(5), helpstring("method UnGlueFile")] HRESULT UnGlueFile();
+		[id(6), helpstring("method SaveFile")] HRESULT SaveFile();
+		[id(7), helpstring("method CreateViewFile")] HRESULT CreateViewFile([in] BSTR SrcFileName,[in] BSTR TarFileName,[in] BSTR FieldValue,
+		                     [in] short edit,[in] short sign,[in] BSTR usercode,[in] BSTR password,[in] short batch, [out, retval] BSTR* pzRes );
+		[id(8), helpstring("method Save")] HRESULT Save( [in] BSTR SrcFile, [in] BSTR TarFile, [out, retval] BSTR* pzRes);
+		[id(9), helpstring("method TranslateToSignFile")] HRESULT TranslateToSignFile([in] BSTR SrcFile, [in] BSTR TarFileName, [in] BSTR SignPicName,
+		                     [in] short signatoryID,[in] short edit,[in] short sign, [in] BSTR usercode, [in] BSTR password, [in] short batch, [out, retval] BSTR* pzRes );
+		[id(10), helpstring("method GetRTFHeader")] HRESULT GetRTFHeader();
+		[id(11), helpstring("method SetRTFHeader")] HRESULT SetRTFHeader();
+		[id(12), helpstring("method GetNewFile")]  HRESULT GetNewFile([in] BSTR SrcFile, [in] BSTR TarFile);
+		[id(13), helpstring("method Vox2WaveFile")]  HRESULT Vox2WaveFile([in] BSTR SrcFile, [in] BSTR TarFile);
+		[id(14), helpstring("method LabelGenerate")] HRESULT LabelGenerate([in] BSTR SheetFile, [in] BSTR TmpltFile, [in] BSTR FiledValues);
+		[id(15), helpstring("method ConvertFile")] HRESULT ConvertFile([in] BSTR SrcFileName, [in] BSTR TarFileName, [in] int nOpt, [in] BSTR CtrlStr, [out, retval] BSTR* pzRes);
+		[id(16), helpstring("method CreateHtmlFile")] HRESULT CreateHtmlFile(BSTR szSrct, BSTR szDest, BSTR szParam);
+		[id(17), helpstring("method CreateRTFFile")] HRESULT CreateRTFFile(BSTR szSrc, BSTR szDest, int nOption, BSTR szParam);
+		[id(18), helpstring("method ValidSignProc")] HRESULT ValidSignProc([in]BSTR SrcFile, [in]BSTR SignPicName, [in]short batch, [out, retval]BSTR* pzRes );
+		[id(19), helpstring("method InsertBarCode")] HRESULT InsertBarCode( [in]BSTR BarcodeStr );
+	};
+
+
+[
+	uuid(7408BAC1-D724-11D3-A70A-000021E20B2D),
+	version(1.0),
+	helpstring("GlueFiles 1.0 Type Library")
+]
+library GLUEFILESLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(F2FEDE32-9910-11D2-BB1E-0040053B6D66),
+		helpstring("CreFnetFile Class")
+	]
+	coclass CreFnetFile
+	{
+		[default] interface ICreFnetFile;
+	};
+};

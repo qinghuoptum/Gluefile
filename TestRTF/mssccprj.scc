@@ -1,0 +1,9 @@
+SCC = This is a Source Code Control file
+
+[TestRTF.vcproj]
+SCC_Aux_Path = "E:\VSS"
+SCC_Project_Name = "$/GlueFiles/TestRTF", FEAAAAAA
+
+[TestRTF.dsp]
+SCC_Aux_Path = "\\192.168.0.5\lavss$\"
+SCC_Project_Name = "$/GlueFiles/TestRTF/TestRTF", HNDAAAAA

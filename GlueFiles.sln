@@ -1,0 +1,67 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GlueFiles", "GlueFiles.vcproj", "{8B5CE040-EE68-4494-B319-4F01D1842B75}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestRTF", "TestRTF\TestRTF.vcproj", "{489EDD70-21AA-4CE9-8378-6066899C25A0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccLocalPath0 = .
+		CanCheckoutShared = true
+		SolutionUniqueID = {36FA171C-5028-4C50-BFD0-53DED03E0266}
+		SccProjectUniqueName1 = GlueFiles.vcproj
+		SccLocalPath1 = .
+		CanCheckoutShared = true
+		SccProjectUniqueName2 = TestRTF\\TestRTF.vcproj
+		SccLocalPath2 = .
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection2 = TestRTF\\
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+		Release MinDependency = Release MinDependency
+		Release MinSize = Release MinSize
+		Unicode Debug = Unicode Debug
+		Unicode Release MinDependency = Unicode Release MinDependency
+		Unicode Release MinSize = Unicode Release MinSize
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Debug.ActiveCfg = Debug|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Debug.Build.0 = Debug|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release.ActiveCfg = Unicode Release MinSize|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release.Build.0 = Unicode Release MinSize|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release MinDependency.ActiveCfg = Release MinDependency|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release MinDependency.Build.0 = Release MinDependency|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release MinSize.ActiveCfg = Release MinSize|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Release MinSize.Build.0 = Release MinSize|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Release MinDependency.ActiveCfg = Unicode Release MinDependency|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Release MinDependency.Build.0 = Unicode Release MinDependency|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Release MinSize.ActiveCfg = Unicode Release MinSize|Win32
+		{8B5CE040-EE68-4494-B319-4F01D1842B75}.Unicode Release MinSize.Build.0 = Unicode Release MinSize|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Debug.ActiveCfg = Debug|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Debug.Build.0 = Debug|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release.ActiveCfg = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release.Build.0 = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release MinDependency.ActiveCfg = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release MinDependency.Build.0 = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release MinSize.ActiveCfg = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Release MinSize.Build.0 = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Debug.ActiveCfg = Debug|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Debug.Build.0 = Debug|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Release MinDependency.ActiveCfg = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Release MinDependency.Build.0 = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Release MinSize.ActiveCfg = Release|Win32
+		{489EDD70-21AA-4CE9-8378-6066899C25A0}.Unicode Release MinSize.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

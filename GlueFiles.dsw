@@ -1,0 +1,53 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "GlueFiles"=.\GlueFiles.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/GlueFiles", IDAAAAAA
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "TestRTF"=.\TestRTF\TestRTF.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/GlueFiles/TestRTF/TestRTF", HNDAAAAA
+    .\TestRTF
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+    begin source code control
+    "$/", AAAAAAAA
+    .
+    end source code control
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

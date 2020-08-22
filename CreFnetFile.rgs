@@ -1,0 +1,26 @@
+HKCR
+{
+	GlueFiles.CreFnetFile.1 = s 'CreFnetFile Class'
+	{
+		CLSID = s '{F2FEDE32-9910-11D2-BB1E-0040053B6D66}'
+	}
+	GlueFiles.CreFnetFile = s 'CreFnetFile Class'
+	{
+		CLSID = s '{F2FEDE32-9910-11D2-BB1E-0040053B6D66}'
+		CurVer = s 'GlueFiles.CreFnetFile.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F2FEDE32-9910-11D2-BB1E-0040053B6D66} = s 'CreFnetFile Class'
+		{
+			ProgID = s 'GlueFiles.CreFnetFile.1'
+			VersionIndependentProgID = s 'GlueFiles.CreFnetFile'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{7408BAC1-D724-11D3-A70A-000021E20B2D}'
+		}
+	}
+}
