@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0f5422e-c62f-47ab-beac-228b21f635e4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PatParse_.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PatParse_.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RTFProc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/RTFProc.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +51,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1598111415861</updated>
-      <workItem from="1598111419452" duration="9023000" />
+      <workItem from="1598111419452" duration="10581000" />
     </task>
     <servers />
   </component>

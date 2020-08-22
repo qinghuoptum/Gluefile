@@ -617,7 +617,7 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
 
 }
 
-bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, bool nOnce )
+bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, int nOnce )
 {
        /*	 C : PAD format
        0 - PADLeft
@@ -648,7 +648,7 @@ bool CRTFProc::GetOneSourceValue( LPTSTR pzPrm, FIELDKEY *ptrk, FIELDVAL *ptrv, 
     if (psV1==NULL) return false; // This Key does not exist in pszParam
     // for nOnce=1, we need cancel this KeyName from the Param String
     // to prevent further processing
-    if (nOnce) { psV1[0]='-', psV1[1]='-'; }
+    // if (nOnce) { psV1[0]='-', psV1[1]='-'; } // We will do that in the report
 
 
     psV1 += strlen( szKeyNmX );
