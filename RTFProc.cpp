@@ -670,7 +670,10 @@ bool CRTFProc::GetOneSourceValue( LPCTSTR pszParam, FIELDKEY *ptrk, FIELDVAL *pt
     // ++nn;  // Counting the fields to be replaced.
 
     // Formating the target string (replace for)
-    nKeyLen = ptrk->nValLen;
+	if ( ptrk->nType == 2 )
+		nKeyLen = nVal;
+	else
+		nKeyLen = ptrk->nValLen;
     pzv = ptrv->szTarget;
     szFmt = ptrk->szFormat;
 
@@ -727,9 +730,8 @@ bool CRTFProc::GetOneSourceValue( LPCTSTR pszParam, FIELDKEY *ptrk, FIELDVAL *pt
             nKVTarLen = FormatForExp2( pzv, szTmp, szFmt );
             break;
         default:
-            nKeyLen = nVal;
-            nKVTarLen = nKeyLen;
-            strncpy( pzv, szTmp, sizeof(szTmp) );
+            nKVTarLen = nVal;
+            strncpy( pzv, szTmp, nVal );
     }
     pzv[ nKVTarLen ] = 0;
     ptrv->nTgtLen = nKVTarLen;
@@ -743,6 +745,7 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
     LPTSTR pzv;
     int nTgt;
 	FIELDKEY subKey;
+	char szTmp[20];
 
     if ( ptrk->nType == 1)
     {
@@ -776,14 +779,15 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
                 ++(ptrv->nTgtLen);
             }
         }
-        // So far, (ptr->nSrcPos, ptr->nSrcLen) gives out KeyValue (source string)
+        // So far, (ptrv->nSrcPos, ptrv->nSrcLen) gives out KeyValue (source string)
 		return true;
     }
     else if ( ptrk->nType == 2)
     {
         // Search a segment by looking for the end tag
         bool ss = false;
-        int j;
+        int j, ix, nLev;
+
         k=i;
         while ( k<nLmt )
         {
@@ -792,11 +796,26 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
             {
                 if ( GetHiddenSegment( k, m_szBuf, nLmt, &subKey ) && ParseOneFieldKey( m_szBuf, &subKey ))
                 {
-                    if ( (strcmp(subKey.szKeyName, "End")==0) && subKey.nType==2 )
+                    if ( (strcmp(subKey.szKeyName, "End")==0) && subKey.nType==3 )
                     {
                         ss = true;
                         ptrv->nSrcPos = i;
                         ptrv->nSrcLen = (j-i);
+
+						// need check balance of bracket {} in source, and add the extra stuff in the end of target string for balance 
+						nLev=0;
+						for ( ix=i; ix<j; ix++ )
+							if (m_szBuf[ix]=='{') ++nLev;
+							else if (m_szBuf[ix]=='}') --nLev;
+						szTmp[0]=0;
+
+						while ( nLev != 0 )
+							if ( nLev>0 ) {--nLev; strcat(szTmp, "{");}
+							else {++nLev; strcat(szTmp,"}");}
+
+						strcat(ptrv->szTarget, szTmp);
+						ptrv->nTgtLen += strlen(szTmp);
+						
                         i = k;
                     }
                     break;
@@ -993,11 +1012,11 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
                             strncpy( pzSrc, pzTgt, nSrc );
                         else
                         {
-                            memmove( pzSrc+nTgt, pzSrc+nSrc, nLmt-(nSrcPos+nSrc) );
+                            memmove( pzSrc+nTgt, pzSrc+nSrc, nLmt-(nSrcPos+nSrc)+2 );
                             memcpy( pzSrc, pzTgt, nTgt );
                             // memmove( m_szBuf+nFldsStart+nKVTarLen, m_szBuf+nFldsStart+nK,nLmt-(nFldsStart+nK) );
                             // memcpy( m_szBuf+nFldsStart, szKeyTarVal, nKVTarLen );
-                            nTmp = nLmt+(nTgt-nSrc);
+                            nLmt = nLmt+(nTgt-nSrc);
                             // np += (nKVTarLen-nK);
                             // nTmp = ReplaceOneFlds( nFldsStart, nKVSrcLen, nKVTarLen, nLmt, szKeyTarVal );
 

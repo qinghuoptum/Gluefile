@@ -63,9 +63,9 @@ CTestRTFDlg::CTestRTFDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CTestRTFDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CTestRTFDlg)
-	m_szSrc = _T("C:\\TEMP\\TEST1.RTF");
-	m_szDest = _T("C:\\TEMP\\TEST2.RTF");
-	m_szRepl = _T("Notes=Comments|PatLast=Smith|PatFirst=John|InsBarCode=True|1stICD9=1234567890|2ndICD9=ABCDEFSGG|");
+	m_szSrc = _T("C:\\WORK\\TEST1.RTF");
+	m_szDest = _T("C:\\WORK\\TEST2.RTF");
+	m_szRepl = _T("TestCmt=Comments Tesdc \\par New Lines|PatLast=Smith|PatFirst=John|InsBarCode=True|1stICD9=1234567890|2ndICD9=ABCDEFSGG|Dob=10/02/1989|ShtDesc=This is decription of ....|DictDrFirst=Von Normien");
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);

@@ -13,9 +13,9 @@ Class2=CTestRTFDlg
 Class3=CAboutDlg
 
 ResourceCount=3
-Resource1=IDD_ABOUTBOX
+Resource1=IDD_TESTRTF_DIALOG
 Resource2=IDR_MAINFRAME
-Resource3=IDD_TESTRTF_DIALOG
+Resource3=IDD_ABOUTBOX
 
 [CLS:CTestRTFApp]
 Type=0
