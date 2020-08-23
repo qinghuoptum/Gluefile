@@ -22,6 +22,11 @@
 	 A  	 B	C D	E					 F  	   G
 	~~~~~~~~~~~~~~~~~~~~~~~~			 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    <*Start AcctNo 1 1> {any contents} <*End>    New field definition (C D is the same as old one) 
+     ------ ------ - -  -------------- ------    All <*_> need to be hidden
+	        A      C D  E              H
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			
      A : Key Name
 	 
 	 B : Length of the Value String.
