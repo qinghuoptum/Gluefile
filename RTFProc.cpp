@@ -157,19 +157,6 @@ bool CHKHIDDEN( int i, LPTSTR ps )
 }
 
 
-
-
-/*
-#define		CHKHIDDEN(i)	( ( m_szBuf[i]=='{' && m_szBuf[i+1]=='\\' && m_szBuf[i+2]=='v' && \
-							    (m_szBuf[i+3]==' '||m_szBuf[i+3]=='\\') ) || \
-							  (	m_szBuf[i]=='{' && m_szBuf[i+1]=='\n' && m_szBuf[i+2]=='\\' \
-								&& m_szBuf[i+3]=='v' && (m_szBuf[i+4]==' '||m_szBuf[i+4]=='\\') ) || \
-							  (	m_szBuf[i]=='{' && m_szBuf[i+1]=='\r' && m_szBuf[i+2]=='\n' && m_szBuf[i+3]=='\\' \
-								&& m_szBuf[i+4]=='v' && (m_szBuf[i+5]==' '||m_szBuf[i+5]=='\\') ) || \
-							  ( m_szBuf[i]=='\\' && m_szBuf[i+1]=='v' && (m_szBuf[i+2]=='1' ||m_szBuf[i+2]==' ')) )
-*/
-
-
 int CHKFIELD( int i, LPTSTR ps )
 {
 	int k=0;
@@ -464,6 +451,7 @@ int CRTFProc::FormatAdjustEx( LPCTSTR pszTgtStr, LPTSTR m_szBuf, long& m_total )
 }
 
 
+// Newly adding codes in 8/22/2020 for <*Start...>  <*End> fields
 bool CRTFProc::GetHiddenSegment( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr )
 {
     int nLev, nFldsStart, nFldsLen;
@@ -550,17 +538,13 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
     while ( ps<pos ) (ps++)[0]=' ';
 
 
+    // Processing the field left over:
+    // Type=1:  "KeyName [nn] C D>"
+    // Type=2:  "Start KeyName C :=[FmetStr]>"
+    // Type=3:  "KeyName>"
+
     ch=' ';
     szKeyName[0]=0;	nValLen=0;
-
-    // Need more detail parsing for <*KeyName dd d d> or <*KeyName dd d :=Format String>
-    /* sscanf( m_szBuf+k+2,"%199[^> ]%c%d %c%*c%c%c",
-            szKeyName, &ch0, &nKeyLen, &ch1, &ch2, &ch );
-    if (ch0=='>' || (ch!='>' && ch!='=' ) || nKeyLen<0 || nKeyLen>99 ) goto Loop;
-    pos = m_szBuf+(k+2)+strlen(szKeyName)+1;
-    while ( pos[0] && pos[0]<=' ' ) ++pos;
-    pos1 = pos + 7;
-    */
     pos = m_szBuf+k+pn; ps = pos; j=0;
     while ( (pos<pzLmt) && j<199 && pos[0]>' ' && pos[0]!='>' ) szKeyName[j++]=(pos++)[0];
     szKeyName[j]=0;
@@ -763,7 +747,8 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
         {
             ptrv->nSrcPos = i;
             ptrv->nSrcLen = 0;
-            // add a space in front/end of target value if it meets \par immediately
+
+            // Adjust target string - add a space in front/end of target value if empty source meets \par immediately
             if ( strnicmp( m_szBuf+i, "\\par", 4 )==0 && !bCopy )
             {
                 pzv = ptrv->szTarget;
@@ -802,7 +787,7 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
                         ptrv->nSrcPos = i;
                         ptrv->nSrcLen = (j-i);
 
-						// need check balance of bracket {} in source, and add the extra stuff in the end of target string for balance 
+						// Adjust target string - need check balance of bracket {} in source and add the extra brackets in the end of target string for balance
 						nLev=0;
 						for ( ix=i; ix<j; ix++ )
 							if (m_szBuf[ix]=='{') ++nLev;
@@ -824,6 +809,7 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
             else
                 k++;
         }
+        // So far, (ptrv->nSrcPos, ptrv->nSrcLen) gives out KeyValue (source string)
         return ss;
     }
     else
@@ -988,15 +974,18 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
 	{
 		if (CHKHIDDEN(i,m_szBuf))
 		{
+            memset( &sKey, 0, sizeof(sKey));
+            memset( &sVal, 0, sizeof(sVal));
 		    if (GetHiddenSegment( i, m_szBuf, nLmt, &sKey ) && ParseOneFieldKey( m_szBuf, &sKey ))
 		    {
 		        if ( GetOneSourceValue( pszParam, &sKey, &sVal, nOnce ) )
 		        {
 		            if ( GetOneFieldValue( i, m_szBuf, nLmt, &sKey, &sVal, false ) )
 		            {
-                        // Replace the source string with target
+                        // Replace the source string with target in place of documents
                         // Source: ptr->nSrcPos, ptr->nSrcLen
                         // Target: ptr->szTarget, ptr->nTgtLen
+
                         int nSrc, nTgt, nSrcPos;
                         LPTSTR pzSrc, pzTgt;
 
@@ -1007,15 +996,13 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
                         pzTgt = sVal.szTarget;
                         if ( sKey.nType==1 && nTgt>99 ) nTgt=99;
 
-                        nn++;  // Count number of replacement
+                        nn++;  // Count number of replacements
                         if ( nSrc == nTgt )
                             strncpy( pzSrc, pzTgt, nSrc );
                         else
                         {
                             memmove( pzSrc+nTgt, pzSrc+nSrc, nLmt-(nSrcPos+nSrc)+2 );
                             memcpy( pzSrc, pzTgt, nTgt );
-                            // memmove( m_szBuf+nFldsStart+nKVTarLen, m_szBuf+nFldsStart+nK,nLmt-(nFldsStart+nK) );
-                            // memcpy( m_szBuf+nFldsStart, szKeyTarVal, nKVTarLen );
                             nLmt = nLmt+(nTgt-nSrc);
                             // np += (nKVTarLen-nK);
                             // nTmp = ReplaceOneFlds( nFldsStart, nKVSrcLen, nKVTarLen, nLmt, szKeyTarVal );
