@@ -818,8 +818,8 @@ bool CRTFProc::GetOneFieldValue( int& i, LPTSTR m_szBuf, int nLmt, FIELDKEY *ptr
 						
                         i = k;
                     }
-                    break;
                 }
+                break;
             }
             else
                 k++;

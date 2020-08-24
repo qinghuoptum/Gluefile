@@ -6,13 +6,7 @@
 --------------------Configuration: TestRTF - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP213D.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /I ".." /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/TestRTF.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp"
-]
-Creating command line "cl.exe @C:\Users\Qing\AppData\Local\Temp\RSP213D.tmp" 
-Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP213E.tmp" with contents
+Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSPC62C.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/TestRTF.pdb" /debug /machine:I386 /out:"Debug/TestRTF.exe" /pdbtype:sept 
 .\Debug\FSound.obj
@@ -23,17 +17,14 @@ Creating temporary file "C:\Users\Qing\AppData\Local\Temp\RSP213E.tmp" with cont
 .\Debug\TestRTFDlg.obj
 .\Debug\TestRTF.res
 ]
-Creating command line "link.exe @C:\Users\Qing\AppData\Local\Temp\RSP213E.tmp"
+Creating command line "link.exe @C:\Users\Qing\AppData\Local\Temp\RSPC62C.tmp"
 <h3>Output Window</h3>
-Compiling...
-RTFProc.cpp
-C:\Users\Qing\Documents\Qing\Source\vc60\FnetProducts\Gluefile\RTFProc.cpp(270) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
 Linking...
 
 
 
 <h3>Results</h3>
-TestRTF.exe - 0 error(s), 1 warning(s)
+TestRTF.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
