@@ -1003,7 +1003,8 @@ BOOL CRTFProc::FieldsReplace( LPCTSTR pszParam, int nOnce )
                         {
                             memmove( pzSrc+nTgt, pzSrc+nSrc, nLmt-(nSrcPos+nSrc)+2 );
                             memcpy( pzSrc, pzTgt, nTgt );
-                            nLmt = nLmt+(nTgt-nSrc);
+                            nLmt += (nTgt-nSrc);
+							i += (nTgt-nSrc);
                             // np += (nKVTarLen-nK);
                             // nTmp = ReplaceOneFlds( nFldsStart, nKVSrcLen, nKVTarLen, nLmt, szKeyTarVal );
 
