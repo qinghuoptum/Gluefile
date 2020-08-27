@@ -1044,7 +1044,7 @@ BOOL FormatProcess( LPTSTR szResult, LPTSTR szTemp, LPTSTR KeyName,
 int FormatForExp( char* pszNew, char* pszOld, char* szFormat, 
 				   char* m_szWorkDir, char* szKTmp )
 {
-	TCHAR szTmp[1200], szVTmp[1200], szTmpF[1200];
+	TCHAR szTmp[2000], szVTmp[2000], szTmpF[2000];
 	TCHAR szBitv[100], szTVal[100], szFVal[100];
 	TCHAR szLast[100], szFirst[100], szMid[100], szTitle[100], szCode[100];
 	LPTSTR pt, ps, qs, ts;
