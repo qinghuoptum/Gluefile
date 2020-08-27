@@ -34,10 +34,10 @@ int GetFormatNum( char* pszBuf, char* pszFmt, char* pszVal )
 
 int GetScanfStr( char* pszBuf, char* pszFmt, char* pszVal )
 {
-	char szTemp[100];
-	memset( szTemp, 0, 100 );
+	char szTemp[2000];
+	memset( szTemp, 0, sizeof(szTemp) );
 	sscanf( pszVal, pszFmt, szTemp );
-	sprintf( pszBuf, szTemp );
+	strcpy( pszBuf, szTemp );
 	return strlen( pszBuf );
 }
 
@@ -73,7 +73,7 @@ int	GetNormalCode( char* szTmp )
 
 int FormatForExp2( char* pzKeyTarVal, char* pzTmp, char *pzFmt )
 {
-	char szTmp[256]={0}, szVaTmp[256]={0}, szFmt[256]={0}, *ps, szWork[20]={0};
+	char szTmp[2000]={0}, szVaTmp[2000]={0}, szFmt[256]={0}, *ps, szWork[20]={0};
 	
 	strncpy( szFmt, pzFmt, sizeof(szFmt)-1 );
 	strncpy( szVaTmp, pzTmp, sizeof(szVaTmp)-1 );
@@ -540,7 +540,7 @@ bool CRTFProc::ParseOneFieldKey( LPTSTR m_szBuf, FIELDKEY *ptr )
 
     // Processing the field left over:
     // Type=1:  "KeyName [nn] C D>"
-    // Type=2:  "Start KeyName C :=[FmetStr]>"
+    // Type=2:  "Start KeyName C :=[FmtStr]>"
     // Type=3:  "KeyName>"
 
     ch=' ';
@@ -611,8 +611,8 @@ bool CRTFProc::GetOneSourceValue( LPCTSTR pszParam, FIELDKEY *ptrk, FIELDVAL *pt
            fill length of replace string in B
        4 - Same as 3, but keep the original string if G is null
        5 - strftime Expression
-       6 - sprinf Formated String
-       7 - sprintf Formated Numerical
+       6 - sprintf Formated String
+       7 - sprintf Formated Numeric
        8 - sscanf Formated String
        9 - ScanSheet Circled Expression
        */
@@ -629,12 +629,15 @@ bool CRTFProc::GetOneSourceValue( LPCTSTR pszParam, FIELDKEY *ptrk, FIELDVAL *pt
 
     strcpy( szKeyNmX, ptrk->szKeyName ); strcat( szKeyNmX, "=" );
     psV1 = strstr( pszParam, szKeyNmX );
-    if (psV1==NULL) return false; // This Key does not exist in pszParam
-    // for nOnce=1, we need cancel this KeyName from the Param String
-    // to prevent further processing
-    // if (nOnce) { psV1[0]='-', psV1[1]='-'; } // We will do that in the report
+	// Check the case where other keyname containing this one, such as Comments and DictComments
+	while ( psV1 != NULL )
+	{
+		if ( psV1==pszParam || psV1[-1]=='|' || psV1[-1]<=' ' ) break;
+		psV1 = strstr( psV1+strlen(szKeyNmX), szKeyNmX );
+	}
 
-
+    if (psV1==NULL) return false; // Current Key does not exist in pszParam
+ 
     psV1 += strlen( szKeyNmX );
     nVal = 0;
     while ( psV1[0] && psV1[0]!=']' && psV1[0]!='|' && nVal<sizeof(szTmp)-1 )
